@@ -1,5 +1,11 @@
 const express = require('express');
-const { getAllForAnEntity,getUserById, getAlbumById, getPhotoById } = require('./dynamoClient');
+const { 
+    getAllForAnEntity,
+    getUserById,
+    getAlbumById,
+    getPhotoById,
+    getAlbumByPhotoId,
+    getUserByAlbumId} = require('./dynamoClient');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,7 +25,7 @@ app.get('/users', async (req, res) => {
                 name: item.name,
                 username: item.username,
                 email: item.email,
-                address: item.address
+                address: JSON.parse(item.address)
             }
             users.push(user)
         })
@@ -46,7 +52,7 @@ app.get('/users/:id', async (req, res) => {
             name: data.Item.name,
             username: data.Item.username,
             email: data.Item.email,
-            address: data.Item.address
+            address: JSON.parse(data.Item.address)
         }
 
         res.status(200).json(user);
@@ -105,6 +111,41 @@ app.get('/photos/:id', async (req, res) => {
 });
 
 
+// Endpoint to get a photo's album by a numeric ID
+app.get('/photos/:id/albums', async (req, res) => {
+    const id = parseInt(req.params.id, 10);  // Ensure the ID is numeric
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid ID format, it should be a number.' });
+    }
+
+    try {
+        const data = await getAlbumByPhotoId(id);
+        if (!data || data.Item || data.length==0) {
+            return res.status(404).json({ error: 'photo\'s album not found' });
+        }
+         
+         const albums = await Promise.all(data.map(async albumRelation => {
+            const albumId = albumRelation.PK.replace('album_', '');
+            const result = await getAlbumById(albumId);  // Await the result
+            if(result.Item){
+                return {
+                    id: result.Item.PK,
+                    title: result.Item.title,
+                    phone: result.Item.phone,
+                    website: result.Item.website,
+                    company: JSON.parse(result.Item.company)
+                };
+            }
+            return {}
+            
+        }));
+
+        res.status(200).json(albums);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch photo\'s albums from DynamoDB' });
+    }
+});
+
 
 // Endpoint to get all albums
 app.get('/albums', async (req, res) => {
@@ -118,7 +159,7 @@ app.get('/albums', async (req, res) => {
                 title: item.title,
                 phone: item.phone,
                 website: item.website,
-                company:item.company
+                company:JSON.parse(item.company)
             }
             albums.push(album)
         })
@@ -147,7 +188,7 @@ app.get('/albums/:id', async (req, res) => {
             title: data.Item.title,
             phone: data.Item.phone,
             website: data.Item.website,
-            company: data.Item.company
+            company: JSON.parse(data.Item.company)
         }
 
         res.status(200).json(album);
@@ -155,6 +196,45 @@ app.get('/albums/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch album from DynamoDB' });
     }
 });
+
+
+
+// Endpoint to get a album's users by a numeric ID
+app.get('/albums/:id/users', async (req, res) => {
+    const id = parseInt(req.params.id, 10);  // Ensure the ID is numeric
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid ID format, it should be a number.' });
+    }
+
+    try {
+        const data = await getUserByAlbumId(id);
+        if (!data || data.Item || data.length==0) {
+            return res.status(404).json({ error: 'album\'s users not found' });
+        }
+
+        
+         const users = await Promise.all(data.map(async userRelation => {
+            const userId = userRelation.related_to.replace('user_', '');
+            const result = await getUserById(userId);  // Await the result
+            if(result.Item){
+                return {
+                    id: result.Item.PK,
+                    name: result.Item.name,
+                    username: result.Item.username,
+                    email: result.Item.email,
+                    address: JSON.parse(result.Item.address)
+                };
+            }
+            return {}
+            
+        }));
+        
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch album\'s users from DynamoDB' });
+    }
+});
+
 
 
 app.listen(port, () => {
