@@ -4,7 +4,7 @@
 FROM node:20
 
 # Set the working directory
-WORKDIR /metaphoto_test
+WORKDIR /metaphoto_test/internal_api
 
 # Copy the package.json and package-lock.json
 COPY package*.json ./
