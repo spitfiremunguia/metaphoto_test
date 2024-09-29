@@ -11,29 +11,42 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient({
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME;
 
-const getUsers = async () => {
-  entity_type = 'profile'
+//gsi_type-index
+
+const getAllForAnEntity = async (type) => {
   const params = {
     TableName: TABLE_NAME,
-    Limit:returnLimit,
-    Key:{
-        entity_type
-    }
+    IndexName: 'gsi_type-index',
+    KeyConditionExpression: "#type = :type",
+    ExpressionAttributeNames: {
+      "#type": "type",
+    },
+    ExpressionAttributeValues: {
+      ":type": type,  // Querying all users
+    },
+    Limit:returnLimit
   };
-  return await dynamoClient.scan(params).promise();
+
+  try {
+    const data = await dynamoClient.query(params).promise();
+    return data.Items;
+  } catch (error) {
+    console.error("Error querying DynamoDB:", error);
+    throw new Error("Error querying DynamoDB");
+  }
 };
 
 
 // Function to get a specific user by ID
 const getUserById = async (user_id) => {
-    id = `user_${user_id}`
-    entity_type = 'profile'
+    PK = `user_${user_id}`
+    SK = 'profile'
     const params = {
 
         TableName: TABLE_NAME,
         Key: { 
-            id,
-            entity_type},
+            PK,
+            SK},
     };
     return await dynamoClient.get(params).promise();
 };
@@ -42,28 +55,28 @@ const getUserById = async (user_id) => {
 
 // Function to get a specific user by ID
 const getAlbumById = async (user_id) => {
-    id = `album_${user_id}`
-    entity_type = 'metadata'
+    PK = `album_${user_id}`
+    SK = 'metadata'
     const params = {
 
         TableName: TABLE_NAME,
         Key: { 
-            id,
-            entity_type},
+          PK,
+          SK},
     };
     return await dynamoClient.get(params).promise();
 };
 
 
 const getPhotoById = async (user_id) => {
-    id = `photo_${user_id}`
-    entity_type = 'metadata'
+    PK = `photo_${user_id}`
+    SK = 'metadata'
     const params = {
 
         TableName: TABLE_NAME,
         Key: { 
-            id,
-            entity_type},
+            PK,
+            SK},
     };
     return await dynamoClient.get(params).promise();
 };
@@ -71,6 +84,7 @@ const getPhotoById = async (user_id) => {
 
 
 module.exports = {
+  getAllForAnEntity,
   getUserById,
   getAlbumById,
   getPhotoById
