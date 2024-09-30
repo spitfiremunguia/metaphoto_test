@@ -120,7 +120,7 @@ app.get('/photos/:id/albums', async (req, res) => {
 
     try {
         const data = await getAlbumByPhotoId(id);
-        if (!data || data.Item || data.length==0) {
+        if (!data || data.Item) {
             return res.status(404).json({ error: 'photo\'s album not found' });
         }
          
@@ -136,11 +136,11 @@ app.get('/photos/:id/albums', async (req, res) => {
                     company: JSON.parse(result.Item.company)
                 };
             }
-            return {}
+            return null
             
         }));
 
-        res.status(200).json(albums);
+        res.status(200).json(albums.filter(item => item !== null));
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch photo\'s albums from DynamoDB' });
     }
