@@ -12,21 +12,40 @@ app.use(express.json());
 app.get('/externalapi/photos', async (req, res) => {
   try {
 
+    const title = req.query.title;
+    const albumTitle = req.query['album.title'];
+    const userEmail = req.query['album.user.email'];
+
     // Get all photos details
     const photosResponse = await axios.get(`${internalApihost}photos`);
-    const photos = photosResponse.data;
+    let photos = photosResponse.data;
 
-    const photoAlbums = await Promise.all(photos.map(async photo => {
+    // Filter photos by title if the title query parameter is provided
+    if (title) {
+      photos = photos.filter(photo => photo.title.toLowerCase().includes(title.toLowerCase()));
+    }
+
+    let photoAlbums = await Promise.all(photos.map(async photo => {
       const id = photo.id.replace('photo_', '');
       // Get photos albums
       const photoAlbumsResponse = await axios.get(`${internalApihost}photos/${id}/albums`);
-      const albums = photoAlbumsResponse.data;
+      let albums = photoAlbumsResponse.data;
 
-      const albumUsers = await Promise.all(
+      // Filter albums by title if the album.title query parameter is provided
+      if (albumTitle) {
+        albums = albums.filter(album => album.title.toLowerCase().includes(albumTitle.toLowerCase()));
+      }
+
+      let albumUsers = await Promise.all(
         albums.map(async album => {
           const albumId = album.id.replace('album_', '');
           const usersResponse = await axios.get(`${internalApihost}albums/${albumId}/users`);
-          const users = usersResponse.data;
+          let users = usersResponse.data;
+
+          // Filter albums by title if the album.title query parameter is provided
+          if (userEmail) {
+            users = users.filter(user => user.email===userEmail);
+          }
 
           if (users && users.length > 0) {
             return {
@@ -38,7 +57,6 @@ app.get('/externalapi/photos', async (req, res) => {
               company: album.company,
             };
           }
-
           return {};
         })
       );
@@ -52,8 +70,7 @@ app.get('/externalapi/photos', async (req, res) => {
       }
 
     }));
-
-
+    photoAlbums = photoAlbums.filter(item=>item.albums.length>0)
     // Return the combined photo and album users
     res.status(200).json(photoAlbums);
   } catch (error) {
