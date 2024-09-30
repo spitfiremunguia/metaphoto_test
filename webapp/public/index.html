@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Filter App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Photo Search</h1>
+  
+  <form id="filterForm">
+    <label for="title">Photo Title:</label>
+    <input type="text" id="title" name="title">
+
+    <label for="albumTitle">Album Title:</label>
+    <input type="text" id="albumTitle" name="albumTitle">
+
+    <label for="userEmail">User Email:</label>
+    <input type="text" id="userEmail" name="userEmail">
+
+    <button type="submit">Search</button>
+  </form>
+
+  <ul id="photosContainer"></ul>
+
+  <script src="app.js"></script>
+</body>
+</html>

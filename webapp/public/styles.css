@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  
+  h1 {
+    color: #333;
+  }
+  
+  form {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    margin-right: 10px;
+  }
+  
+  input {
+    margin-right: 10px;
+  }
+  
+  #photosContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .photoContainer {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .imageTitleContainer {
+    display: flex;
+    flex-direction: column;  /* Stack title above the image */
+    margin-right: 20px;
+  }
+  
+  .photoImage {
+    max-width: 200px;
+    margin-top: 10px;  /* Add some space between the title and the image */
+  }
+  
+  .albumContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .albumInfo {
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .albumInfo h3 {
+    margin-top: 0;
+  }
+  
+  .albumInfo p {
+    margin: 5px 0;
+  }
+  

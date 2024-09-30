@@ -59,7 +59,7 @@ app.get('/externalapi/photos', async (req, res) => {
               company: album.company,
             };
           }
-          return {};
+          return null;
         })
       );
 
@@ -68,7 +68,7 @@ app.get('/externalapi/photos', async (req, res) => {
         title: photo.title,
         url: photo.url,
         thumbnailUrl: photo.thumbnailUrl,
-        albums: albumUsers
+        albums: albumUsers.filter(item=>item!==null)
       }
 
     }));
