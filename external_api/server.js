@@ -15,6 +15,8 @@ app.get('/externalapi/photos', async (req, res) => {
     const title = req.query.title;
     const albumTitle = req.query['album.title'];
     const userEmail = req.query['album.user.email'];
+    const offset = req.query['offset'] || 0;
+    const limit = req.query['offset'] || 25;
 
     // Get all photos details
     const photosResponse = await axios.get(`${internalApihost}photos`);

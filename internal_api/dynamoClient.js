@@ -1,6 +1,5 @@
 const AWS = require('aws-sdk');
 require('dotenv').config();
-const returnLimit =25;
 
 // Initialize DynamoDB client
 const dynamoClient = new AWS.DynamoDB.DocumentClient({
@@ -23,8 +22,7 @@ const getAllForAnEntity = async (type) => {
     },
     ExpressionAttributeValues: {
       ":type": type,  // Querying all users
-    },
-    Limit:returnLimit
+    }
   };
 
   try {
@@ -82,8 +80,7 @@ const getAlbumByPhotoId = async (photo_id) => {
     ExpressionAttributeValues: {
       ":related_to": `photo_${photo_id}`,
       ":relation_type": "album_photo"
-    },
-    Limit:returnLimit
+    }
   };
 
   try {
@@ -110,8 +107,7 @@ const getUserByAlbumId = async (album_id) => {
     ExpressionAttributeValues: {
       ":PK": `album_${album_id}`,
       ":type": 'album_user'
-    },
-    Limit:returnLimit
+    }
   };
 
   try {
