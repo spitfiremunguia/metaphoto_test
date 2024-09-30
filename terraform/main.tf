@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    digitalocean = {
+      source  = "digitalocean/digitalocean"
+      version = "~> 2.0"  # Use the latest compatible version, adjust as needed
+    }
+  }
+}
+
 provider "digitalocean" {
   token = var.do_token
 }
@@ -20,6 +29,7 @@ resource "digitalocean_droplet" "web" {
     connection {
         type        = "ssh"
         user        = "root"
+        agent       = true
         private_key = file("~/.ssh/id_rsa")
         host        = digitalocean_droplet.web.ipv4_address
     }
