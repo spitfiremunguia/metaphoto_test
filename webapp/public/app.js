@@ -100,6 +100,7 @@ function displayPhotos(photos) {
               const address = user.address;
               const geo = address.geo;
   
+              // Display the user details
               userInfo.innerHTML = `
                 <h4>User ID: ${user.id}</h4>
                 <p><strong>Name:</strong> ${user.name}</p>
@@ -113,6 +114,17 @@ function displayPhotos(photos) {
                   <li><strong>Geo:</strong> Lat: ${geo.lat}, Lng: ${geo.lng}</li>
                 </ul>
               `;
+  
+              // If there are activity recommendations, display them
+              if (user.activityRecommendations) {
+                const recommendations = document.createElement('div');
+                recommendations.className = 'recommendations';
+                recommendations.innerHTML = `
+                  <h4>Activity Recommendations:</h4>
+                  <p>${user.activityRecommendations.replace(/\n/g, '<br>')}</p>
+                `;
+                userInfo.appendChild(recommendations);  // Append recommendations to the user info
+              }
   
               userList.appendChild(userInfo);
             });
