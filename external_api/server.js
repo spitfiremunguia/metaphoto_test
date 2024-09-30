@@ -15,8 +15,8 @@ app.get('/externalapi/photos', async (req, res) => {
     const title = req.query.title;
     const albumTitle = req.query['album.title'];
     const userEmail = req.query['album.user.email'];
-    const offset = req.query['offset'] || 0;
-    const limit = req.query['offset'] || 25;
+    const offset = parseInt(req.query['offset'],10) || 0;
+    const limit = parseInt(req.query['limit'],10) || 25;
 
     // Get all photos details
     const photosResponse = await axios.get(`${internalApihost}photos`);
@@ -64,7 +64,7 @@ app.get('/externalapi/photos', async (req, res) => {
       );
 
       return {
-        id: photo.id,
+        id: photo.id.replace('photo_',''),
         title: photo.title,
         url: photo.url,
         thumbnailUrl: photo.thumbnailUrl,
@@ -72,7 +72,8 @@ app.get('/externalapi/photos', async (req, res) => {
       }
 
     }));
-    photoAlbums = photoAlbums.filter(item=>item.albums.length>0)
+    photoAlbums = photoAlbums.filter(item=>item.albums.length>0).slice(offset, offset + limit);
+
     // Return the combined photo and album users
     res.status(200).json(photoAlbums);
   } catch (error) {
