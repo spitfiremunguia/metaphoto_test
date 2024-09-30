@@ -5,7 +5,7 @@ const openai = require('./openapiClient');
 
 const app = express();
 const port = 5000;
-const externalApiHost = 'http://localhost:4000/externalapi';  // External API endpoint
+const externalApiHost = 'http://metaphoto_external_api:4000/externalapi';  // External API endpoint
 
 // Middleware to serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));

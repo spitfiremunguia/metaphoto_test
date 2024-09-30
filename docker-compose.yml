@@ -1,0 +1,32 @@
+version: '3'
+services:
+  internalapi:
+    build: ./internal_api
+    container_name: metaphoto_internal_api
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  externalapi:
+    build: ./external_api
+    container_name: metaphoto_external_api
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+
+  webapp:
+    build: ./webapp
+    container_name: metaphoto_webapp
+    ports:
+      - "5000:5000"
+    depends_on:
+      - internalapi
+      - externalapi
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

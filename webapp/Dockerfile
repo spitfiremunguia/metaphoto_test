@@ -1,6 +1,6 @@
 # Use Node.js 20 image as the base image
-#docker build -t metaphoto_external_api .
-#docker run -p 4000:4000 metaphoto_external_api
+#docker build -t metaphoto_webapp .
+#docker run -p 5000:5000 metaphoto_webapp
 FROM node:20
 
 # Set the working directory
