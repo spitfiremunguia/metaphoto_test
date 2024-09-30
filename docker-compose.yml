@@ -20,7 +20,7 @@ services:
     build: ./webapp
     container_name: metaphoto_webapp
     ports:
-      - "5000:5000"
+      - "80:80"
     depends_on:
       - internalapi
       - externalapi
