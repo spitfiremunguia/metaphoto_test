@@ -1,67 +1,64 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  
-  h1 {
-    color: #333;
-  }
-  
-  form {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    margin-right: 10px;
-  }
-  
-  input {
-    margin-right: 10px;
-  }
-  
-  #photosContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .photoContainer {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid #ccc;
-    padding: 20px;
-    margin-bottom: 20px;
-    width: 100%;
-  }
-  
-  .imageTitleContainer {
-    display: flex;
-    flex-direction: column;  /* Stack title above the image */
-    margin-right: 20px;
-  }
-  
-  .photoImage {
-    max-width: 200px;
-    margin-top: 10px;  /* Add some space between the title and the image */
-  }
-  
-  .albumContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .albumInfo {
-    border: 1px solid #ddd;
-    padding: 10px;
-    background-color: #f9f9f9;
-  }
-  
-  .albumInfo h3 {
-    margin-top: 0;
-  }
-  
-  .albumInfo p {
-    margin: 5px 0;
-  }
-  
+/* Flex container for the image, album info, and recommendations */
+.flexContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Space between columns */
+  max-height: 500px;
+  overflow-y: auto; /* Enable scrolling if the content exceeds 500px */
+}
+
+/* First Column: Image and title container */
+.imageTitleContainer {
+  width: 20%; /* Increase the width of the image column to balance the space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+/* Ensure the title is above the image */
+.photoTitle {
+  margin-bottom: 10px;
+}
+
+/* Square container for the image */
+.imageSquareContainer {
+  width: 100%;
+  padding-bottom: 100%; /* Maintain a square aspect ratio */
+  position: relative;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+/* Ensure the image fits within the square and is centered */
+.photoImage {
+  width: 100%;
+  display: block;
+}
+
+/* Second Column: Album info */
+.albumContainer {
+  width: 25%; /* Reduce the width of the album info column */
+  overflow: hidden; /* Ensure the content doesn't overflow the column */
+}
+
+/* Third Column: Recommendations */
+.recommendationsContainer {
+  width: 50%; /* Increase the width of the recommendations column to fill the remaining space */
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-left: 2px solid #ddd;
+  overflow: hidden; /* Ensure content stays within the height */
+}
+
+/* Style for the titles and content within each column */
+h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.recommendations p {
+  margin-bottom: 10px;
+}
