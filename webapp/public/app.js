@@ -37,8 +37,6 @@ function displayPhotos(photos) {
     }
   
     photos.forEach(photo => {
-      console.log(photo);  // Debugging: Ensure each photo is being processed
-  
       // Create a container for each photo and its albums
       const photoContainer = document.createElement('div');
       photoContainer.className = 'photoContainer';
@@ -54,7 +52,7 @@ function displayPhotos(photos) {
   
       // Create an element for the photo image
       const photoImage = document.createElement('img');
-      photoImage.src = photo.url;
+      photoImage.src = photo.thumbnailUrl;
       photoImage.alt = photo.title;
       photoImage.className = 'photoImage';
       imageTitleContainer.appendChild(photoImage);
