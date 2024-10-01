@@ -230,6 +230,7 @@ resource "digitalocean_droplet" "web" {
   provisioner "remote-exec" {
     inline = [
       "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip",
+      "sudo pip3 install boto3",
       "python3 /home/root/app/seedDb.py"
     ]
   }
