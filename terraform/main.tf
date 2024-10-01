@@ -72,7 +72,6 @@ resource "digitalocean_droplet" "web" {
   connection {
     type        = "ssh"
     user        = "root"
-    agent       = true
     private_key = var.private_ssh_key
     host        = digitalocean_droplet.web.ipv4_address
   }

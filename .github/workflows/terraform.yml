@@ -35,8 +35,6 @@ jobs:
           echo 'private_ssh_key = <<EOF' >> terraform.tfvars
           echo "${{ secrets.PRIVATE_SSH_KEY }}" >> terraform.tfvars
           echo 'EOF' >> terraform.tfvars
-
-
         working-directory: ./terraform
 
       # Step 4: Initialize Terraform
