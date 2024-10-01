@@ -31,12 +31,12 @@ variable "ssh_fingerprint" {
 
 # Environment Variables for AWS and DynamoDB
 variable "aws_access_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "aws_secret_access_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -49,12 +49,12 @@ variable "dynamo_table_name" {
 }
 
 variable "open_api_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "private_ssh_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -85,8 +85,8 @@ resource "aws_dynamodb_table" "metaphoto" {
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
   write_capacity = 5
-  hash_key       = "PK"  # Partition key
-  range_key      = "SK"  # Sort key
+  hash_key       = "PK" # Partition key
+  range_key      = "SK" # Sort key
 
   lifecycle {
     create_before_destroy = true
@@ -175,7 +175,7 @@ resource "aws_dynamodb_table" "metaphoto" {
     Name = "Metaphoto_test"
   }
 
-   provisioner "local-exec" {
+  provisioner "local-exec" {
     command = "python seedDb.py"
   }
 
@@ -184,10 +184,10 @@ resource "aws_dynamodb_table" "metaphoto" {
 
 # Create the DigitalOcean Droplet
 resource "digitalocean_droplet" "web" {
-  image  = "ubuntu-22-04-x64"
-  name   = "docker-droplet"
-  region = "nyc3"
-  size   = "s-1vcpu-1gb"
+  image    = "ubuntu-22-04-x64"
+  name     = "docker-droplet"
+  region   = "nyc3"
+  size     = "s-1vcpu-1gb"
   ssh_keys = [var.ssh_fingerprint]
 
   lifecycle {
@@ -197,7 +197,7 @@ resource "digitalocean_droplet" "web" {
   connection {
     type        = "ssh"
     user        = "root"
-    agent        = false
+    agent       = false
     private_key = var.private_ssh_key
     host        = digitalocean_droplet.web.ipv4_address
     timeout     = "5m"
@@ -227,7 +227,24 @@ resource "digitalocean_droplet" "web" {
     destination = "/home/root/app/internal_api/.env"
   }
 
- 
+  #seed the database
+  # Provisioner to install Python before running seedDb.py
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get install -y python3",
+      "sudo apt-get install -y python3-pip"
+    ]
+  }
+
+  # Run the Python script to seed the DynamoDB table
+  provisioner "remote-exec" {
+    inline = [
+      "python3 seedDb.py"
+    ]
+  }
+
+
   # Run Docker Compose to start the application
   provisioner "remote-exec" {
     inline = [
@@ -243,7 +260,7 @@ resource "digitalocean_droplet" "web" {
 resource "digitalocean_record" "webapp" {
   domain = digitalocean_domain.my_domain.name
   type   = "A"
-  name   = "www"  # Use "@" if you want the root domain (example.com), or "www" for www.example.com
+  name   = "www" # Use "@" if you want the root domain (example.com), or "www" for www.example.com
   value  = digitalocean_droplet.web.ipv4_address
   ttl    = 300
 }
