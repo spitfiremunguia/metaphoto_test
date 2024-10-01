@@ -22,10 +22,12 @@ variable "ssh_fingerprint" {
 # Environment Variables for AWS and DynamoDB
 variable "aws_access_key" {
   type = string
+  sensitive = true
 }
 
 variable "aws_secret_access_key" {
   type = string
+  sensitive = true
 }
 
 variable "aws_region" {
@@ -38,6 +40,7 @@ variable "dynamo_table_name" {
 
 variable "open_api_key" {
   type = string
+  sensitive = true
 }
 
 variable "private_ssh_key" {
