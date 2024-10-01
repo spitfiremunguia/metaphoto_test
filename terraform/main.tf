@@ -233,6 +233,7 @@ resource "digitalocean_droplet" "web" {
   # Run the Python script to seed the DynamoDB table
   provisioner "remote-exec" {
     inline = [
+      "while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo 'Waiting for dpkg lock to be released...'; sleep 5; done",
       "python3 seedDb.py"
     ]
   }
