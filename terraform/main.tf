@@ -227,7 +227,6 @@ resource "digitalocean_droplet" "web" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get install -y python3",
-      "sudo apt-get install -y python3-pip"
     ]
   }
 
