@@ -80,7 +80,7 @@ resource "digitalocean_domain" "my_domain" {
 }
 
 #create dynamotable
-resource "aws_dynamodb_table" "metaphoto" {
+resource "aws_dynamodb_table" "metaphoto_test" {
   name           = "Metaphoto_test"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
