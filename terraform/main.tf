@@ -200,6 +200,12 @@ resource "digitalocean_droplet" "web" {
 
   # First, install Docker and clone the repository
 
+    provisioner "file" {
+    source      = "install-docker.sh"
+    destination = "/root/install-docker.sh"
+  }
+
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x /root/install-docker.sh",
@@ -207,10 +213,6 @@ resource "digitalocean_droplet" "web" {
     ]
   }
 
-  provisioner "file" {
-    source      = "install-docker.sh"
-    destination = "/root/install-docker.sh"
-  }
 
   # Now that the repository is cloned and directories are created, copy the .env files
   provisioner "file" {
