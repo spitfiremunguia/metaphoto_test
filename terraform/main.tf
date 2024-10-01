@@ -19,6 +19,26 @@ variable "ssh_fingerprint" {
   type = string
 }
 
+variable "aws_access_key" {
+  type = string
+}
+
+variable "aws_secret_access_key" {
+  type = string
+}
+
+variable "aws_region" {
+  type = string
+}
+
+variable "dynamo_table_name" {
+  type = string
+}
+
+variable "open_api_key" {
+  type = string
+}
+
 resource "digitalocean_droplet" "web" {
   image  = "ubuntu-22-04-x64"
   name   = "docker-droplet"

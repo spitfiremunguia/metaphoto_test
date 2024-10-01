@@ -44,3 +44,6 @@ Thumbs.db
 
 # Ignore any local settings that might accidentally be created
 local_settings/
+
+terraform/terraform.tfvars
+
