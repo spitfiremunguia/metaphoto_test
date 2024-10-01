@@ -229,7 +229,7 @@ resource "digitalocean_droplet" "web" {
   # Run the Python script to seed the DynamoDB table
   provisioner "remote-exec" {
     inline = [
-
+      "sudo apt-get install -y  python3-pip",
       "python3 /home/root/app/seedDb.py"
     ]
   }
