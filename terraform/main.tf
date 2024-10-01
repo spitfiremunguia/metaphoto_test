@@ -226,7 +226,6 @@ resource "digitalocean_droplet" "web" {
   # Provisioner to install Python before running seedDb.py
   provisioner "remote-exec" {
     inline = [
-      "sudo apt-get update",
       "sudo apt-get install -y python3",
       "sudo apt-get install -y python3-pip"
     ]
