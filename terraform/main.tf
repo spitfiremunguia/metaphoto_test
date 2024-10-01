@@ -64,6 +64,11 @@ data "template_file" "internal_api_env" {
   EOT
 }
 
+# Create a DNS domain in DigitalOcean
+resource "digitalocean_domain" "my_domain" {
+  name = "metaphoto.site"
+}
+
 # Create the DigitalOcean Droplet
 resource "digitalocean_droplet" "web" {
   image  = "ubuntu-22-04-x64"
