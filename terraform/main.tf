@@ -69,6 +69,104 @@ resource "digitalocean_domain" "my_domain" {
   name = "metaphoto.site"
 }
 
+#create dynamotable
+resource "aws_dynamodb_table" "metaphoto" {
+  name           = "Metaphoto_test"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "PK"  # Partition key
+  range_key      = "SK"  # Sort key
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  attribute {
+    name = "PK"
+    type = "S"
+  }
+
+  attribute {
+    name = "SK"
+    type = "S"
+  }
+
+  attribute {
+    name = "email"
+    type = "S"
+  }
+
+  attribute {
+    name = "related_to"
+    type = "S"
+  }
+
+  attribute {
+    name = "relation_type"
+    type = "S"
+  }
+
+  attribute {
+    name = "title"
+    type = "S"
+  }
+
+  attribute {
+    name = "type"
+    type = "S"
+  }
+
+  # Global Secondary Index: gsi_type-index
+  global_secondary_index {
+    name            = "gsi_type-index"
+    hash_key        = "type"
+    range_key       = "PK"
+    projection_type = "ALL"
+
+    read_capacity  = 5
+    write_capacity = 5
+  }
+
+  # Global Secondary Index: gsi_related_to-index
+  global_secondary_index {
+    name            = "gsi_related_to-index"
+    hash_key        = "related_to"
+    range_key       = "relation_type"
+    projection_type = "ALL"
+
+    read_capacity  = 5
+    write_capacity = 5
+  }
+
+  # Global Secondary Index: gsi_title-index
+  global_secondary_index {
+    name            = "gsi_title-index"
+    hash_key        = "type"
+    range_key       = "title"
+    projection_type = "ALL"
+
+    read_capacity  = 5
+    write_capacity = 5
+  }
+
+  # Global Secondary Index: gsi_email-index
+  global_secondary_index {
+    name            = "gsi_email-index"
+    hash_key        = "email"
+    range_key       = "PK"
+    projection_type = "ALL"
+
+    read_capacity  = 5
+    write_capacity = 5
+  }
+
+  tags = {
+    Name = "Metaphoto_test"
+  }
+}
+
+
 # Create the DigitalOcean Droplet
 resource "digitalocean_droplet" "web" {
   image  = "ubuntu-22-04-x64"
