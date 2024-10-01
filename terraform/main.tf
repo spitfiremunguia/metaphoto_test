@@ -72,6 +72,10 @@ resource "digitalocean_droplet" "web" {
   size   = "s-1vcpu-1gb"
   ssh_keys = [var.ssh_fingerprint]
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   connection {
     type        = "ssh"
     user        = "root"
