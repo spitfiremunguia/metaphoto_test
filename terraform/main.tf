@@ -40,6 +40,11 @@ variable "open_api_key" {
   type = string
 }
 
+variable "private_ssh_key" {
+  type = string
+  sensitive = true
+}
+
 # Use template_file to generate the .env files for webapp and internal_api
 data "template_file" "webapp_env" {
   template = <<-EOT
@@ -68,7 +73,7 @@ resource "digitalocean_droplet" "web" {
     type        = "ssh"
     user        = "root"
     agent       = true
-    private_key = file("~/.ssh/id_rsa")
+    private_key = var.private_ssh_key
     host        = digitalocean_droplet.web.ipv4_address
   }
 
