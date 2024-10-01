@@ -31,9 +31,6 @@ jobs:
           echo 'aws_secret_access_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"' >> terraform.tfvars
           echo 'aws_region = "${{ vars.AWS_REGION }}"' >> terraform.tfvars
           echo 'dynamo_table_name = "${{ vars.DYNAMO_TABLE_NAME }}"' >> terraform.tfvars
-          echo 'private_ssh_key = <<EOF' >> terraform.tfvars
-          echo "${{ secrets.PRIVATE_SSH_KEY }}" >> terraform.tfvars
-          echo 'EOF' >> terraform.tfvars
         working-directory: ./terraform
 
       # Step 4: Initialize Terraform
@@ -58,5 +55,7 @@ jobs:
 
       # Step 7: Apply Terraform changes
       - name: Apply Terraform
+        env:
+            TF_VAR_private_ssh_key: ${{ secrets.PRIVATE_SSH_KEY }}
         run: terraform apply -auto-approve
         working-directory: ./terraform
