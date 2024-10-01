@@ -35,6 +35,8 @@ jobs:
 
       # Step 4: Initialize Terraform
       - name: Initialize Terraform
+        env:
+          TF_VAR_private_ssh_key: ${{ secrets.PRIVATE_SSH_KEY }}
         run: terraform init
         working-directory: ./terraform
 
@@ -46,16 +48,22 @@ jobs:
         working-directory: ./terraform
 
       - name: Debug - Show terraform.tfvars
+        env:
+            TF_VAR_private_ssh_key: ${{ secrets.PRIVATE_SSH_KEY }}
         run: cat terraform.tfvars
         working-directory: ./terraform
 
       # Step 6: Plan Terraform changes
       - name: Terraform Plan
+        env:
+          TF_VAR_private_ssh_key: ${{ secrets.PRIVATE_SSH_KEY }}
         run: terraform plan
         working-directory: ./terraform
         
 
       # Step 7: Apply Terraform changes
       - name: Apply Terraform
+        env:
+          TF_VAR_private_ssh_key: ${{ secrets.PRIVATE_SSH_KEY }}
         run: terraform apply -auto-approve
         working-directory: ./terraform
