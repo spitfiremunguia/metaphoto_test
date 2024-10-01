@@ -2,6 +2,8 @@ version: '3'
 services:
   internalapi:
     build: ./internal_api
+    env_file:
+      - /home/root/app/internal_api/.env
     container_name: metaphoto_internal_api
     ports:
       - "3000:3000"
@@ -18,6 +20,8 @@ services:
 
   webapp:
     build: ./webapp
+    env_file:
+      - /home/root/app/webapp/.env
     container_name: metaphoto_webapp
     ports:
       - "80:80"
