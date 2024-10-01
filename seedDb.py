@@ -6,7 +6,7 @@ table = dynamodb.Table('Metaphoto_test')
 
 # Load the data from dynamo_data.json
 with open('./dynamo_data.json', 'r') as f:
-    items = json.load(f)  # This loads the JSON as a Python list
+    data = json.load(f)  # This loads the JSON as a Python list
 
 # Extract the actual items from the "Items" field
 items = data.get('Items', [])
