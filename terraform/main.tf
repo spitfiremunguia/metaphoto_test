@@ -234,8 +234,10 @@ resource "digitalocean_droplet" "web" {
       # Install boto3 using pip3
       "sudo pip3 install boto3",
       # setup credentials so the python script can execute correctly
-      "export AWS_ACCESS_KEY_ID='${var.aws_access_key}'",
-      "export AWS_SECRET_ACCESS_KEY='${var.aws_secret_access_key}'",
+      "mkdir -p /root/.aws",
+      "echo '[default]' > /root/.aws/credentials",
+      "echo 'aws_access_key_id=${var.aws_access_key}' >> /root/.aws/credentials",
+      "echo 'aws_secret_access_key=${var.aws_secret_access_key}' >> /root/.aws/credentials",
       "export AWS_REGION='${var.aws_region}'",
       # Run the seedDb Python script to seed DynamoDB
       "python3 /home/root/app/seedDb.py"
