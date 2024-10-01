@@ -125,6 +125,18 @@ resource "digitalocean_droplet" "web" {
   }
 }
 
+
+# Create an A record that points to the Droplet's IP
+resource "digitalocean_record" "webapp" {
+  domain = digitalocean_domain.my_domain.name
+  type   = "A"
+  name   = "www"  # Use "@" if you want the root domain (example.com), or "www" for www.example.com
+  value  = digitalocean_droplet.web.ipv4_address
+  ttl    = 300
+}
+
+
+
 output "droplet_ip" {
   value = digitalocean_droplet.web.ipv4_address
 }
