@@ -1,0 +1,51 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Terraform in the GitHub runner
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.9
+
+      # Step 3: Generate terraform.tfvars using GitHub secrets and variables
+      - name: Generate terraform.tfvars
+        run: |
+          echo 'do_token = "${{ secrets.DO_TOKEN }}"' >> terraform.tfvars
+          echo 'ssh_fingerprint = "${{ secrets.SSH_FINGERPRINT }}"' >> terraform.tfvars
+          echo 'open_api_key = "${{ secrets.OPEN_API_KEY }}"' >> terraform.tfvars
+          echo 'aws_access_key = "${{ secrets.AWS_ACCESS_KEY }}"' >> terraform.tfvars
+          echo 'aws_secret_access_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"' >> terraform.tfvars
+          echo 'aws_region = "${{ vars.AWS_REGION }}"' >> terraform.tfvars
+          echo 'dynamo_table_name = "${{ vars.DYNAMO_TABLE_NAME }}"' >> terraform.tfvars
+
+      # Step 4: Initialize Terraform
+      - name: Initialize Terraform
+        run: terraform init
+
+      # Step 5: Validate Terraform configuration
+      - name: Validate Terraform
+        run: terraform validate
+
+      # Step 6: Plan Terraform changes
+      - name: Terraform Plan
+        run: terraform plan
+
+      # Step 7: Apply Terraform changes
+      - name: Apply Terraform
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
+        run: terraform apply -auto-approve
