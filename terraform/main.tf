@@ -200,7 +200,7 @@ resource "digitalocean_droplet" "web" {
 
   # First, install Docker and clone the repository
 
-    provisioner "file" {
+  provisioner "file" {
     source      = "install-docker.sh"
     destination = "/root/install-docker.sh"
   }
