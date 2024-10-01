@@ -199,16 +199,17 @@ resource "digitalocean_droplet" "web" {
   }
 
   # First, install Docker and clone the repository
-  provisioner "file" {
-    source      = "install-docker.sh"
-    destination = "/root/install-docker.sh"
-  }
 
   provisioner "remote-exec" {
     inline = [
       "chmod +x /root/install-docker.sh",
       "/root/install-docker.sh"
     ]
+  }
+
+  provisioner "file" {
+    source      = "install-docker.sh"
+    destination = "/root/install-docker.sh"
   }
 
   # Now that the repository is cloned and directories are created, copy the .env files
@@ -222,11 +223,11 @@ resource "digitalocean_droplet" "web" {
     destination = "/home/root/app/internal_api/.env"
   }
 
-  
+
   # Run the Python script to seed the DynamoDB table
   provisioner "remote-exec" {
     inline = [
-      
+
       "python3 seedDb.py"
     ]
   }

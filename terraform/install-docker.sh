@@ -86,7 +86,3 @@ cd /home/${USER}/app
 
 # Ensure the correct permissions
 sudo chown -R ${USER}:${USER} /home/${USER}/app
-
-
-
-
