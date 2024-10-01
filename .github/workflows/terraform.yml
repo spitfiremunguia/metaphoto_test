@@ -35,17 +35,19 @@ jobs:
       # Step 4: Initialize Terraform
       - name: Initialize Terraform
         run: terraform init
+        working-directory: ./terraform
 
       # Step 5: Validate Terraform configuration
       - name: Validate Terraform
         run: terraform validate
+        working-directory: ./terraform
 
       # Step 6: Plan Terraform changes
       - name: Terraform Plan
         run: terraform plan
+        working-directory: ./terraform
 
       # Step 7: Apply Terraform changes
       - name: Apply Terraform
-        env:
-          DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
         run: terraform apply -auto-approve
+        working-directory: ./terraform
