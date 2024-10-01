@@ -174,6 +174,11 @@ resource "aws_dynamodb_table" "metaphoto" {
   tags = {
     Name = "Metaphoto_test"
   }
+
+   provisioner "local-exec" {
+    command = "python seedDb.py"
+  }
+
 }
 
 
