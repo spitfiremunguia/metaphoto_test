@@ -237,8 +237,9 @@ resource "digitalocean_droplet" "web" {
       "echo 'aws_access_key_id=${var.aws_access_key}' >> /root/.aws/credentials",
       "echo 'aws_secret_access_key=${var.aws_secret_access_key}' >> /root/.aws/credentials",
       "export AWS_REGION='${var.aws_region}'",
+      "cd /home/root/app",
       # Run the seedDb Python script to seed DynamoDB
-      "python3 /home/root/app/seedDb.py"
+      "python3 seedDb.py"
     ]
   }
 

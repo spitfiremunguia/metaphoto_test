@@ -21,7 +21,7 @@ dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('Metaphoto_test')
 
 # Load the data from dynamo_data.json
-with open('./dynamo_data.json', 'r') as f:
+with open('/home/root/app/dynamo_data.json', 'r') as f:
     data = json.load(f)
 
 # Extract the actual items from the "Items" field
