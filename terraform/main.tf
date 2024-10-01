@@ -89,7 +89,7 @@ resource "aws_dynamodb_table" "metaphoto_test" {
   range_key      = "SK" # Sort key
 
   lifecycle {
-    create_before_destroy = true
+    prevent_destroy = false
   }
 
   attribute {
