@@ -8,6 +8,9 @@ table = dynamodb.Table('Metaphoto_test')
 with open('./dynamo_data.json', 'r') as f:
     items = json.load(f)  # This loads the JSON as a Python list
 
+# Extract the actual items from the "Items" field
+items = data.get('Items', [])
+
 # Ensure each item is a dictionary before inserting
 for item in items:
     if isinstance(item, dict):

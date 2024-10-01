@@ -630,8 +630,5 @@
                 "S": "photo"
             }
         }
-    ],
-    "Count": 33,
-    "ScannedCount": 33,
-    "ConsumedCapacity": null
+    ]
 }
