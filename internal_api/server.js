@@ -31,7 +31,7 @@ app.get('/users', async (req, res) => {
         })
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user from DynamoDB' });
+        res.status(500).json({ error: `Failed to fetch user from DynamoDB :${error}` });
     }
 });
 
@@ -57,7 +57,7 @@ app.get('/users/:id', async (req, res) => {
 
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user from DynamoDB' });
+        res.status(500).json({ error: `Failed to fetch user from DynamoDB :${error}` });
     }
 });
 
