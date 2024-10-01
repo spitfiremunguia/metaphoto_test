@@ -31,6 +31,11 @@ items = data.get('Items', [])
 for item in items:
     python_item = dynamodb_json_to_python(item)  # Convert to Python dict
     print(python_item)
-    table.put_item(Item=python_item)  # Insert into DynamoDB
+    try:
+        table.put_item(Item=python_item)  # Insert into DynamoDB
+    except Exception as e:
+        print(f"Failed to insert item {idx + 1}: {e}")
 
 print("Items successfully inserted into DynamoDB.")
+
+
