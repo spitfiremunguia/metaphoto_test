@@ -229,8 +229,13 @@ resource "digitalocean_droplet" "web" {
   # Run the Python script to seed the DynamoDB table
   provisioner "remote-exec" {
     inline = [
-      "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip",
-      "sudo pip install boto3",
+      # Retry mechanism to avoid dpkg lock issues
+      "n=0; until [ $n -ge 5 ]; do sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip && break || (echo 'Retrying in 10s...' && sleep 10); n=$((n+1)); done",
+
+      # Install boto3 using pip3
+      "sudo pip3 install boto3",
+
+      # Run the seedDb Python script to seed DynamoDB
       "python3 /home/root/app/seedDb.py"
     ]
   }
