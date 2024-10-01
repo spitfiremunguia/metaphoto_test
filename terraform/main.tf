@@ -231,10 +231,12 @@ resource "digitalocean_droplet" "web" {
     inline = [
       # Retry mechanism to avoid dpkg lock issues
       "n=0; until [ $n -ge 5 ]; do sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip && break || (echo 'Retrying in 10s...' && sleep 10); n=$((n+1)); done",
-
       # Install boto3 using pip3
       "sudo pip3 install boto3",
-
+      # setup credentials so the python script can execute correctly
+      "export AWS_ACCESS_KEY_ID='${var.aws_access_key}'",
+      "export AWS_SECRET_ACCESS_KEY='${var.aws_secret_access_key}'",
+      "export AWS_REGION='${var.aws_region}'",
       # Run the seedDb Python script to seed DynamoDB
       "python3 /home/root/app/seedDb.py"
     ]
