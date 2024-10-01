@@ -31,7 +31,6 @@ jobs:
           echo 'aws_secret_access_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"' >> terraform.tfvars
           echo 'aws_region = "${{ vars.AWS_REGION }}"' >> terraform.tfvars
           echo 'dynamo_table_name = "${{ vars.DYNAMO_TABLE_NAME }}"' >> terraform.tfvars
-          # Use heredoc syntax for multi-line SSH key
           echo 'private_ssh_key = <<EOF' >> terraform.tfvars
           echo "${{ secrets.PRIVATE_SSH_KEY }}" >> terraform.tfvars
           echo 'EOF' >> terraform.tfvars
