@@ -18,7 +18,7 @@ def dynamodb_json_to_python(item):
 
 # Initialize a session using Amazon DynamoDB
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-table = dynamodb.Table('Metaphoto_test')  # Update with your table name
+table = dynamodb.Table('Metaphoto_test')
 
 # Load the data from dynamo_data.json
 with open('./dynamo_data.json', 'r') as f:
@@ -30,6 +30,7 @@ items = data.get('Items', [])
 # Iterate over each item, convert, and insert into DynamoDB
 for item in items:
     python_item = dynamodb_json_to_python(item)  # Convert to Python dict
+    print(python_item)
     table.put_item(Item=python_item)  # Insert into DynamoDB
 
 print("Items successfully inserted into DynamoDB.")
