@@ -27,14 +27,15 @@ with open('./dynamo_data.json', 'r') as f:
 # Extract the actual items from the "Items" field
 items = data.get('Items', [])
 
+
+# Insert only the first item for debugging
+if items:
+    first_item = dynamodb_json_to_python(items[0])
+    print(f"Inserting single item for debugging: {first_item}")
+    table.put_item(Item=first_item)
+
 # Iterate over each item, convert, and insert into DynamoDB
-for item in items:
-    python_item = dynamodb_json_to_python(item)  # Convert to Python dict
-    print(python_item)
-    try:
-        table.put_item(Item=python_item)  # Insert into DynamoDB
-    except Exception as e:
-        print(f"Failed to insert item {idx + 1}: {e}")
+
 
 print("Items successfully inserted into DynamoDB.")
 
