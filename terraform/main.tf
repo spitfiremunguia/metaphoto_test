@@ -230,7 +230,7 @@ resource "digitalocean_droplet" "web" {
   provisioner "remote-exec" {
     inline = [
 
-      "python3 seedDb.py"
+      "python3 /home/root/app/seedDb.py"
     ]
   }
 
