@@ -222,18 +222,11 @@ resource "digitalocean_droplet" "web" {
     destination = "/home/root/app/internal_api/.env"
   }
 
-  #seed the database
-  # Provisioner to install Python before running seedDb.py
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get install -y python3",
-    ]
-  }
-
+  
   # Run the Python script to seed the DynamoDB table
   provisioner "remote-exec" {
     inline = [
-      "while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo 'Waiting for dpkg lock to be released...'; sleep 5; done",
+      
       "python3 seedDb.py"
     ]
   }
