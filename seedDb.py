@@ -1,7 +1,7 @@
 import boto3
 import json
 
-dynamodb = boto3.resource('dynamodb', region_name='us-eas-1')
+dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('Metaphoto_test')
 
 # Load the data from dynamo_data.json
