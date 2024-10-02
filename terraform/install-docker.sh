@@ -6,6 +6,8 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+github_token=$1
+
 # Update the package list and install prerequisites
 sudo apt-get update -y
 sudo apt-get install -y \
@@ -51,7 +53,7 @@ docker --version || true
 echo "Docker installation completed. Non-sudo access might require re-login."
 
 # Clone the application repository
-git clone https://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@github.com/spitfiremunguia/metaphoto_test.git /home/${USER}/app
+git clone https://$github_token/spitfiremunguia/metaphoto_test.git /home/${USER}/app
 
 # Change to the repository directory
 cd /home/${USER}/app

@@ -56,6 +56,12 @@ variable "private_ssh_key" {
   sensitive = true
 }
 
+variable "gihub_token" {
+  type      = string
+  sensitive = true
+}
+
+
 # Use template_file to generate the .env files for webapp and internal_api
 data "template_file" "webapp_env" {
   template = <<-EOT
@@ -202,7 +208,7 @@ resource "digitalocean_droplet" "web" {
   # Install Docker and clone the repository
   provisioner "file" {
     source      = "install-docker.sh"
-    destination = "/root/install-docker.sh"
+    destination = "/root/install-docker.sh ${var.gihub_token}"
   }
 
   provisioner "remote-exec" {
