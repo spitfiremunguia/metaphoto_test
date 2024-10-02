@@ -31,11 +31,11 @@ variable "ssh_fingerprint" {
 
 # Environment Variables for AWS and DynamoDB
 variable "aws_access_key" {
-  type = string
+  type      = string
 }
 
 variable "aws_secret_access_key" {
-  type = string
+  type      = string
 }
 
 variable "aws_region" {
@@ -55,12 +55,10 @@ variable "private_ssh_key" {
   type      = string
   sensitive = true
 }
-
 variable "gihub_token" {
   type      = string
   sensitive = true
 }
-
 
 # Use template_file to generate the .env files for webapp and internal_api
 data "template_file" "webapp_env" {
@@ -83,7 +81,7 @@ resource "digitalocean_domain" "my_domain" {
   name = "metaphoto.site"
 }
 
-# Create DynamoDB table
+#create dynamotable
 resource "aws_dynamodb_table" "metaphoto_test" {
   name           = "Metaphoto_test"
   billing_mode   = "PROVISIONED"
@@ -105,6 +103,7 @@ resource "aws_dynamodb_table" "metaphoto_test" {
     name = "SK"
     type = "S"
   }
+
   attribute {
     name = "email"
     type = "S"
@@ -140,6 +139,7 @@ resource "aws_dynamodb_table" "metaphoto_test" {
     read_capacity  = 5
     write_capacity = 5
   }
+
   # Global Secondary Index: gsi_related_to-index
   global_secondary_index {
     name            = "gsi_related_to-index"
@@ -161,6 +161,7 @@ resource "aws_dynamodb_table" "metaphoto_test" {
     read_capacity  = 5
     write_capacity = 5
   }
+
   # Global Secondary Index: gsi_email-index
   global_secondary_index {
     name            = "gsi_email-index"
@@ -177,21 +178,14 @@ resource "aws_dynamodb_table" "metaphoto_test" {
   }
 }
 
-# Create a dummy null_resource to trigger recreation
-resource "null_resource" "force_redeploy" {
-  triggers = {
-    always_run = timestamp() # This value changes every time Terraform runs
-  }
-}
 
-# Create a Droplet in DigitalOcean, depending on null_resource for recreation
+# Create the DigitalOcean Droplet
 resource "digitalocean_droplet" "web" {
-  depends_on = [null_resource.force_redeploy] # Force recreation based on null_resource
-  image      = "ubuntu-22-04-x64"
-  name       = "docker-droplet"
-  region     = "nyc3"
-  size       = "s-1vcpu-2gb"
-  ssh_keys   = [var.ssh_fingerprint]
+  image    = "ubuntu-22-04-x64"
+  name     = "docker-droplet"
+  region   = "nyc3"
+  size     = "s-1vcpu-2gb"
+  ssh_keys = [var.ssh_fingerprint]
 
   lifecycle {
     create_before_destroy = true
@@ -200,16 +194,19 @@ resource "digitalocean_droplet" "web" {
   connection {
     type        = "ssh"
     user        = "root"
+    agent       = false
     private_key = var.private_ssh_key
     host        = digitalocean_droplet.web.ipv4_address
     timeout     = "5m"
   }
 
-  # Install Docker and clone the repository
+  # First, install Docker and clone the repository
+
   provisioner "file" {
     source      = "install-docker.sh"
     destination = "/root/install-docker.sh ${var.gihub_token}"
   }
+
 
   provisioner "remote-exec" {
     inline = [
@@ -218,7 +215,8 @@ resource "digitalocean_droplet" "web" {
     ]
   }
 
-  # Copy .env files for webapp and internal_api
+
+  # Now that the repository is cloned and directories are created, copy the .env files
   provisioner "file" {
     content     = data.template_file.webapp_env.rendered
     destination = "/home/root/app/webapp/.env"
@@ -229,20 +227,26 @@ resource "digitalocean_droplet" "web" {
     destination = "/home/root/app/internal_api/.env"
   }
 
+
   # Run the Python script to seed the DynamoDB table
   provisioner "remote-exec" {
     inline = [
+      # Retry mechanism to avoid dpkg lock issues
       "n=0; until [ $n -ge 5 ]; do sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip && break || (echo 'Retrying in 10s...' && sleep 10); n=$((n+1)); done",
+      # Install boto3 using pip3
       "sudo pip3 install boto3",
+      # setup credentials so the python script can execute correctly
       "mkdir -p /root/.aws",
       "echo '[default]' > /root/.aws/credentials",
       "echo 'aws_access_key_id=${var.aws_access_key}' >> /root/.aws/credentials",
       "echo 'aws_secret_access_key=${var.aws_secret_access_key}' >> /root/.aws/credentials",
       "export AWS_REGION='${var.aws_region}'",
       "cd /home/root/app",
+      # Run the seedDb Python script to seed DynamoDB
       "python3 seedDb.py --table_name ${var.dynamo_table_name} --seed_route dynamo_data.json --aws_region ${var.aws_region}"
     ]
   }
+
 
   # Run Docker Compose to start the application
   provisioner "remote-exec" {
@@ -254,6 +258,7 @@ resource "digitalocean_droplet" "web" {
   }
 }
 
+
 # Create an A record that points to the Droplet's IP
 resource "digitalocean_record" "webapp" {
   domain = digitalocean_domain.my_domain.name
@@ -262,6 +267,8 @@ resource "digitalocean_record" "webapp" {
   value  = digitalocean_droplet.web.ipv4_address
   ttl    = 300
 }
+
+
 
 output "droplet_ip" {
   value = digitalocean_droplet.web.ipv4_address
