@@ -99,8 +99,7 @@ resource "aws_dynamodb_table" "metaphoto_test" {
     name = "SK"
     type = "S"
   }
-
-  attribute {
+   attribute {
     name = "email"
     type = "S"
   }
@@ -135,8 +134,7 @@ resource "aws_dynamodb_table" "metaphoto_test" {
     read_capacity  = 5
     write_capacity = 5
   }
-
-  # Global Secondary Index: gsi_related_to-index
+    # Global Secondary Index: gsi_related_to-index
   global_secondary_index {
     name            = "gsi_related_to-index"
     hash_key        = "related_to"
@@ -173,7 +171,6 @@ resource "aws_dynamodb_table" "metaphoto_test" {
     Name = "Metaphoto_test"
   }
 }
-
 
 # Create a Droplet in DigitalOcean
 resource "digitalocean_droplet" "web" {
@@ -250,8 +247,9 @@ resource "null_resource" "force_recreate_droplet" {
     always_run = timestamp()  # Forces recreation on every run
   }
 
+  # This is now a local operation, not on the remote machine
   provisioner "local-exec" {
-    command = "terraform taint digitalocean_droplet.web"
+    command = "terraform taint -allow-missing digitalocean_droplet.web"
   }
 }
 
