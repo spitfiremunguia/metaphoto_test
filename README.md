@@ -7,7 +7,7 @@
 
 This application was created on an WSL2 instance of Ubuntu 24.04. In order to work and debug this application locally you will need to install in your environment:
 
--  ``Terraform  v1.9.6]``
+-  ``Terraform  v1.9.6``
 - ``Python3 and pip3``
 - ``NodeJs v 20``
 - ``Docker and Docker compose``
