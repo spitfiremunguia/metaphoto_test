@@ -171,20 +171,24 @@ resource "aws_dynamodb_table" "metaphoto_test" {
   }
 }
 
-# Create a Droplet in DigitalOcean and force recreation on every run
+# Create a dummy null_resource to trigger recreation
+resource "null_resource" "force_redeploy" {
+  triggers = {
+    always_run = timestamp() # This value changes every time Terraform runs
+  }
+}
+
+# Create a Droplet in DigitalOcean, depending on null_resource for recreation
 resource "digitalocean_droplet" "web" {
-  image    = "ubuntu-22-04-x64"
-  name     = "docker-droplet"
-  region   = "nyc3"
-  size     = "s-1vcpu-2gb"
-  ssh_keys = [var.ssh_fingerprint]
+  depends_on = [null_resource.force_redeploy] # Force recreation based on null_resource
+  image      = "ubuntu-22-04-x64"
+  name       = "docker-droplet"
+  region     = "nyc3"
+  size       = "s-1vcpu-2gb"
+  ssh_keys   = [var.ssh_fingerprint]
 
   lifecycle {
     create_before_destroy = true
-    ignore_changes        = [name]
-    replace_triggered_by = [
-      timestamp() # Forces recreation on every run by using dynamic timestamp
-    ]
   }
 
   connection {
