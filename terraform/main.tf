@@ -239,7 +239,7 @@ resource "digitalocean_droplet" "web" {
       "export AWS_REGION='${var.aws_region}'",
       "cd /home/root/app",
       # Run the seedDb Python script to seed DynamoDB
-      "python3 seedDb.py"
+      "python3 seedDb.py --table_name ${var.dynamo_table_name} --seed_route /home/root/app/dynamo_data.json --aws_region ${var.aws_region}"
     ]
   }
 
