@@ -31,11 +31,11 @@ variable "ssh_fingerprint" {
 
 # Environment Variables for AWS and DynamoDB
 variable "aws_access_key" {
-  type      = string
+  type = string
 }
 
 variable "aws_secret_access_key" {
-  type      = string
+  type = string
 }
 
 variable "aws_region" {
@@ -77,7 +77,7 @@ resource "digitalocean_domain" "my_domain" {
   name = "metaphoto.site"
 }
 
-#create dynamotable
+# Create DynamoDB table
 resource "aws_dynamodb_table" "metaphoto_test" {
   name           = "Metaphoto_test"
   billing_mode   = "PROVISIONED"
@@ -175,7 +175,7 @@ resource "aws_dynamodb_table" "metaphoto_test" {
 }
 
 
-# Create the DigitalOcean Droplet
+# Create a Droplet in DigitalOcean
 resource "digitalocean_droplet" "web" {
   image    = "ubuntu-22-04-x64"
   name     = "docker-droplet"
@@ -190,19 +190,16 @@ resource "digitalocean_droplet" "web" {
   connection {
     type        = "ssh"
     user        = "root"
-    agent       = false
     private_key = var.private_ssh_key
     host        = digitalocean_droplet.web.ipv4_address
     timeout     = "5m"
   }
 
-  # First, install Docker and clone the repository
-
+  # Install Docker and clone the repository
   provisioner "file" {
     source      = "install-docker.sh"
     destination = "/root/install-docker.sh"
   }
-
 
   provisioner "remote-exec" {
     inline = [
@@ -211,8 +208,7 @@ resource "digitalocean_droplet" "web" {
     ]
   }
 
-
-  # Now that the repository is cloned and directories are created, copy the .env files
+  # Copy .env files for webapp and internal_api
   provisioner "file" {
     content     = data.template_file.webapp_env.rendered
     destination = "/home/root/app/webapp/.env"
@@ -223,26 +219,20 @@ resource "digitalocean_droplet" "web" {
     destination = "/home/root/app/internal_api/.env"
   }
 
-
   # Run the Python script to seed the DynamoDB table
   provisioner "remote-exec" {
     inline = [
-      # Retry mechanism to avoid dpkg lock issues
       "n=0; until [ $n -ge 5 ]; do sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip && break || (echo 'Retrying in 10s...' && sleep 10); n=$((n+1)); done",
-      # Install boto3 using pip3
       "sudo pip3 install boto3",
-      # setup credentials so the python script can execute correctly
       "mkdir -p /root/.aws",
       "echo '[default]' > /root/.aws/credentials",
       "echo 'aws_access_key_id=${var.aws_access_key}' >> /root/.aws/credentials",
       "echo 'aws_secret_access_key=${var.aws_secret_access_key}' >> /root/.aws/credentials",
       "export AWS_REGION='${var.aws_region}'",
       "cd /home/root/app",
-      # Run the seedDb Python script to seed DynamoDB
       "python3 seedDb.py --table_name ${var.dynamo_table_name} --seed_route dynamo_data.json --aws_region ${var.aws_region}"
     ]
   }
-
 
   # Run Docker Compose to start the application
   provisioner "remote-exec" {
@@ -254,6 +244,16 @@ resource "digitalocean_droplet" "web" {
   }
 }
 
+# Force droplet recreation on every Terraform run
+resource "null_resource" "force_recreate_droplet" {
+  triggers = {
+    always_run = timestamp()  # Forces recreation on every run
+  }
+
+  provisioner "local-exec" {
+    command = "terraform taint digitalocean_droplet.web"
+  }
+}
 
 # Create an A record that points to the Droplet's IP
 resource "digitalocean_record" "webapp" {
@@ -263,8 +263,6 @@ resource "digitalocean_record" "webapp" {
   value  = digitalocean_droplet.web.ipv4_address
   ttl    = 300
 }
-
-
 
 output "droplet_ip" {
   value = digitalocean_droplet.web.ipv4_address
