@@ -55,7 +55,7 @@ variable "private_ssh_key" {
   type      = string
   sensitive = true
 }
-variable "gihub_token" {
+variable "github_token" {
   type      = string
   sensitive = true
 }
@@ -211,7 +211,7 @@ resource "digitalocean_droplet" "web" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /root/install-docker.sh",
-      "/root/install-docker.sh ${var.gihub_token}"
+      "/root/install-docker.sh ${var.github_token}"
     ]
   }
 
