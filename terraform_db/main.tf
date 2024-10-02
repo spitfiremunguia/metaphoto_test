@@ -134,7 +134,7 @@ resource "null_resource" "run_local_command" {
     # Run the Python script to seed the DynamoDB table
   provisioner "local-exec" {
     
-      command = "sudo chmod 700 ./seed_db.sh && ./seed_db.sh"
+      command = "sudo cdchmod 700 ./seed_db.sh && ./seed_db.sh ${var.dynamo_table_name} ${var.aws_region}"
     
   }
   
