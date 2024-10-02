@@ -39,12 +39,19 @@ Then use ``docker run -p 5000:5000 metaphoto_webapp`` to run the image using the
 
 ## RUN THE WHOLE PROJECT LOCALLY
 
-If you want to run the 3 services that composes this project, just provide each service folder with their respective .env file if needed and use docker compose to build and configure the three services using the docker-compose.yml file provided at metaphoto\ 
+If you want to run the 3 services that composes this project, just provide each service folder with their respective .env file if needed and use docker compose to build and configure the three services using the docker-compose.yml file provided at ``metaphoto/ `` root path. 
 
+Before building the compose file **you need to change the paths on the env_file properties to the actual path in your host for the internal_api/.env and webapp/.env files**
+
+The path that you see there its needed for the CI/DI pipeline so don't commit those changes.
+
+After that is ready just:
 ```
 docker compose build
 docker compose up
 ```
+You should be able to use the webapp on port:5000 as usual.
+
 ### warning
 if your host environment is using port 80, **you will need to change docker-compose.yml file to use port:5000 or whatever other port you want the webapp to be exposed onto**. Just change the port number in the webapp section inside the docker-compose.yml
 
