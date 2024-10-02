@@ -204,14 +204,14 @@ resource "digitalocean_droplet" "web" {
 
   provisioner "file" {
     source      = "install-docker.sh"
-    destination = "/root/install-docker.sh ${var.gihub_token}"
+    destination = "/root/install-docker.sh"
   }
 
 
   provisioner "remote-exec" {
     inline = [
       "chmod +x /root/install-docker.sh",
-      "/root/install-docker.sh"
+      "/root/install-docker.sh ${var.gihub_token}"
     ]
   }
 
