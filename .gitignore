@@ -46,4 +46,5 @@ Thumbs.db
 local_settings/
 
 terraform/terraform.tfvars
+terraform_db/terraform.tfvars
 
