@@ -1,6 +1,8 @@
 
 # [www.metaphoto.site](www.metaphoto.site)
 
+![Demo Image](metaphoto_site.gif)
+
 ## Development environment
 
 This application was created on an WSL2 instance of Ubuntu 24.04. In order to work and debug this application locally you will need to install in your environment:
