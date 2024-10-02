@@ -53,7 +53,7 @@ docker --version || true
 echo "Docker installation completed. Non-sudo access might require re-login."
 
 # Clone the application repository
-git clone https://$github_token/spitfiremunguia/metaphoto_test.git /home/${USER}/app
+git clone https://$github_token@github.com/spitfiremunguia/metaphoto_test.git /home/${USER}/app
 
 # Change to the repository directory
 cd /home/${USER}/app
