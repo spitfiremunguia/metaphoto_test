@@ -90,6 +90,9 @@ OPENAI_API_KEY=<your openapi api access key>
 ```
 WebApp **uses   External API services running on port 5000**. That implies **Internal API must be running also on port 3000** so webapp can work.
 
+### warning
+Change the port numbers on ``metaphoto_test/webapp/server.js`` from 80 to 5000 and do the same in webapp's dockerfile since the project is configured to run on a droplet.
+
 After those requirements are met, you only need to use docker and the Dockerfile provided in ``metaphoto_test/webapp``  by using ``docker build -t metaphoto_webapp .`` to the image.
 Then use ``docker run -p 5000:5000 metaphoto_webapp`` to run the image using the port 5000.
 
