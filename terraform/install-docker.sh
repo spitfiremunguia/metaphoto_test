@@ -6,14 +6,41 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-sudo curl -fsSL https://get.docker.com -o get-docker.sh 
-sudo sh get-docker.sh
+# Update the package list and install prerequisites
+sudo apt-get update -y
+sudo apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
 
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-docker-compose --version
+# Add Docker’s official GPG key
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-echo "Docker and Docker Compose installation completed successfully!"
+# Set up the Docker repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update the package list again
+sudo apt-get update -y
+
+# Install Docker Engine, Docker CLI, containerd, and Docker Compose plugin without any interaction
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Start Docker service
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Add the current user to the docker group to allow non-sudo usage (note: $USER may not be available in Terraform runs)
+sudo usermod -aG docker $USER || true  # Safeguard for situations where $USER is not defined
+
+# Print Docker version to verify the installation (suppressing errors in case this runs in non-interactive shells)
+docker --version || true
+
+# Docker installation finished message (no need for user input)
+echo "Docker installation completed. Non-sudo access might require re-login."
 
 # Clone the application repository
 # Use the token in the HTTPS URL

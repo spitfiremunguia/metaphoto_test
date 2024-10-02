@@ -180,7 +180,7 @@ resource "digitalocean_droplet" "web" {
   image    = "ubuntu-22-04-x64"
   name     = "docker-droplet"
   region   = "nyc3"
-  size     = "s-1vcpu-1gb"
+  size     = "s-1vcpu-2gb"
   ssh_keys = [var.ssh_fingerprint]
 
   lifecycle {
