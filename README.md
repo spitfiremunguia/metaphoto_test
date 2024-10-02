@@ -1,4 +1,6 @@
-TERRAFORM SCRIPT
+
+# [www.metaphoto.site](www.metaphoto.site)
+
 ## Development environment
 
 This application was created on an WSL2 instance of Ubuntu 24.04. In order to work and debug this application locally you will need to install in your environment:
@@ -162,3 +164,11 @@ The IaaC and the listener for GitHub changes is deployed in a Terraform Cloud or
 You can configure your own terraform organization, after that you need to provide your workspace variables that are basically the same as what you would put on the ``terraform.tfvars`` file. You also need to give it access to the repository.
 
 That's the only thing you need for Terraform Cloud free tier. It will give you 500 actions and 1 agent per month.
+
+## OPENAI vs Hugging Face
+
+- **Hugging Face** is a platform that focuses on Natural Language Processing (NLP), offering a wide range of open-source models, which are ideal for text tasks like classification, translation, and text generation. It’s highly customizable, allowing you to fine-tune models with your own data. However, Hugging Face is primarily focused on text processing and doesn't excel in handling multimodal tasks (where you integrate text and image understanding together). 
+
+- **OpenAI**, on the other hand, excels in both NLP and multimodal tasks. OpenAI’s GPT-4 model provides advanced language understanding, which can analyze the context of photo album titles and generate highly relevant recommendations. Additionally, OpenAI supports multimodal interactions, allowing you to integrate image-based AI (like DALL·E) alongside text inputs. This is particularly useful if you want your API to evolve into a system that offers recommendations based not only on text but potentially on the content of the photos as well.
+
+- **Why I choose OpenAI?** OpenAI is well-suited for generating intelligent, context-aware recommendations based on photo album titles because its models are designed to understand and reason about both text and images. It’s easier to integrate into production environments, provides reliable performance, and offers flexibility to expand into more complex multimodal use cases in the future. The strong contextual reasoning abilities of GPT-4 will likely give you bette recommendations than models from Hugging Face for this use case. The payment model is very flexible allow me for under 5$ use the API.
