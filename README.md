@@ -1,3 +1,51 @@
+## Development environment
+
+This application was created on an WSL2 instance of Ubuntu 24.04. In order to work and debug this application locally you will need to install in your environment:
+
+-  ``Terraform  v1.9.6]``
+- ``Python3 and pip3``
+- ``NodeJs v 20``
+- ``Docker and Docker compose``
+- ``AWS CLI``
+
+In order to use dynamo and also the terraform setup on terraform cloud you would need a set of access keys ``aws_access_key``  and ``aws_secret_access_key``
+
+It's important that your access keys have these policies attached to them:
+
+```
+AmazonEC2FullAccess
+AmazonDynamoDBFullAccess
+```
+It doesn't need to be that broad, but you need something that allows you to manipulate dynamo tables and get ec2 metadata since it's needed by terraform cloud for some reason.
+
+If you are working on Ubuntu 24.04 or any Debian distribution you need to remember, after installing the AWS CLI to create this folder ``~/.aws`` and add the ``config`` and ``credentials`` file and make them at least readable ``chmod 600 credentials``  ``chmod 600 config config ``
+
+## Database
+So, you don't have to setup a database I included a secondary terraform folder named ``/terraform_db`` that creates a table in dynamo so you can use that in your development environment.
+To run this terraform script you need to supply a ``terraform.tfvars`` file with the following variables and values:
+```
+aws_access_key  ="<your aws access key>"
+
+aws_secret_access_key  ="<your aws secret access key>"
+
+aws_region  ="<your aws region name>"
+
+dynamo_table_name  =<the name you want for your table>
+```
+You will need to have python3 and pip3 installed in your development environment if you want to run this terraform script since it uses a python script to seed your database with the data I included in the file ``dynamo_data.json`` file.
+
+The other thing you might need to change if you don't work with Ubuntu or Debian, it's the path of the dynamo_data.json that I reference inside ``metaphoto_test/terraform_db/seed_db.sh`` in the line 14:
+``cd  /home/${USER}/metaphoto_test``
+
+after that you just have to run the basic terraform commands
+```
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+After that you should have a dynamodb table with the project schema ready to be referenced in your code.
+
 ## Internal API
 Internal API it's a node 20 express web API written using Javascript.
 To run this application, you need to provide an **.env** file into ```metaphoto_test/internal_api``` root folder with the following keys:
@@ -10,6 +58,10 @@ AWS_REGION=<your aws region>
 
 DYNAMO_TABLE_NAME=<your table name>
 ```
+Those keys are basically the same as the ones described in the previous sections.
+
+You must setup a database with the correct schema described in the previous section or ``metaphoto_test/terraform_db/main.tf``
+
 After that you only need to use docker and the Dockerfile provided in ``metaphoto_test/internal_api``  by using ``docker build -t metaphoto_internal_api .`` to the image.
 Then use ``docker run -p 3000:3000 metaphoto_internal_api`` to run the image using the port 3000.
 You should be able to access this API with ``http://localhost:3000/``
