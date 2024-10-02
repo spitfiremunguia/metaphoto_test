@@ -1,5 +1,6 @@
 const form = document.getElementById('filterForm');
 const photosContainer = document.getElementById('photosContainer');
+const spinnerOverlay = document.getElementById('spinnerOverlay'); // Get the spinner element
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -7,6 +8,9 @@ form.addEventListener('submit', async (e) => {
   const title = document.getElementById('title').value;
   const albumTitle = document.getElementById('albumTitle').value;
   const userEmail = document.getElementById('userEmail').value;
+
+  // Show the spinner
+  spinnerOverlay.style.display = 'flex';
 
   // Build query parameters
   const queryParams = new URLSearchParams({
@@ -19,13 +23,15 @@ form.addEventListener('submit', async (e) => {
     // Fetch photos from the backend API (which proxies the external API)
     const response = await fetch(`/api/photos?${queryParams.toString()}`);
     const photos = await response.json();
-    
+
     displayPhotos(photos);
   } catch (error) {
     console.error('Error fetching photos:', error);
+  } finally {
+    // Hide the spinner after the response is received
+    spinnerOverlay.style.display = 'none';
   }
 });
-
 
 function displayPhotos(photos) {
   photosContainer.innerHTML = '';  // Clear existing photos
@@ -179,4 +185,3 @@ function displayPhotos(photos) {
     photosContainer.appendChild(photoContainer);
   });
 }
-

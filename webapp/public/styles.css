@@ -1,64 +1,222 @@
-/* Flex container for the image, album info, and recommendations */
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #EDF4F2; /* Light pale background */
+  color: #31473A; /* Dark greenish text */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%; /* Take full width */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+form {
+  background-color: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 800px; /* Increase the form width */
+  text-align: center;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #31473A;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #31473A;
+}
+
+input[type="text"], input[type="email"], button {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 1rem;
+  border: 1px solid #31473A;
+  border-radius: 10px;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus, input[type="email"]:focus {
+  outline: none;
+  border-color: #1e3528;
+  box-shadow: 0 0 5px rgba(49, 71, 58, 0.5);
+}
+
+button {
+  background-color: #31473A;
+  color: white;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 10px;
+}
+
+button:hover {
+  background-color: #1e3528;
+}
+
+#photosContainer {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Increase minimum card size */
+  gap: 30px; /* Add larger gap between cards */
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.photoContainer {
+  background-color: white;
+  border: 1px solid #31473A;
+  border-radius: 16px;
+  padding: 30px; /* Increase padding inside cards */
+  margin-bottom: 30px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photoContainer:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
 .flexContainer {
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* Space between columns */
-  max-height: 500px;
-  overflow-y: auto; /* Enable scrolling if the content exceeds 500px */
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-/* First Column: Image and title container */
 .imageTitleContainer {
-  width: 20%; /* Increase the width of the image column to balance the space */
+  width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
   text-align: center;
 }
 
-/* Ensure the title is above the image */
 .photoTitle {
-  margin-bottom: 10px;
+  font-size: 2rem; /* Increase font size for title */
+  margin-bottom: 20px;
+  color: #31473A;
 }
 
-/* Square container for the image */
 .imageSquareContainer {
   width: 100%;
-  padding-bottom: 100%; /* Maintain a square aspect ratio */
-  position: relative;
+  height: 300px; /* Increase image height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #f0f0f0;
   overflow: hidden;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
 }
 
-/* Ensure the image fits within the square and is centered */
 .photoImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.albumContainer, .recommendationsContainer {
   width: 100%;
-  display: block;
 }
 
-/* Second Column: Album info */
-.albumContainer {
-  width: 25%; /* Reduce the width of the album info column */
-  overflow: hidden; /* Ensure the content doesn't overflow the column */
+.albumInfo, .userInfo {
+  background-color: #EDF4F2;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 1px solid #31473A;
 }
 
-/* Third Column: Recommendations */
+.albumInfo h3, .userInfo h4 {
+  color: #31473A;
+}
+
+a {
+  color: #31473A;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.userList ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  margin-bottom: 5px;
+}
+
 .recommendationsContainer {
-  width: 50%; /* Increase the width of the recommendations column to fill the remaining space */
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-left: 2px solid #ddd;
-  overflow: hidden; /* Ensure content stays within the height */
+  background-color: #EDF4F2;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+  border: 1px solid #31473A;
 }
 
-/* Style for the titles and content within each column */
-h4 {
-  margin-top: 0;
+.recommendationsContainer h4 {
   margin-bottom: 10px;
+  color: #31473A;
 }
 
-.recommendations p {
-  margin-bottom: 10px;
+
+#spinnerOverlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 9999; /* Make sure it appears on top of everything */
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Light gray */
+  border-top: 8px solid #31473A; /* Dark greenish */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
