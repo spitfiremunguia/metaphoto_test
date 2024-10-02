@@ -34,7 +34,7 @@ variable "dynamo_table_name" {
 
 #create dynamotable
 resource "aws_dynamodb_table" "metaphoto_test_dev" {
-  name           = "metaphoto_test_dev"
+  name           = "${var.dynamo_table_name}"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
   write_capacity = 5
@@ -125,7 +125,7 @@ resource "aws_dynamodb_table" "metaphoto_test_dev" {
   }
 
   tags = {
-    Name = "metaphoto_test_dev"
+    Name = "${var.dynamo_table_name}"
   }
  
 }
